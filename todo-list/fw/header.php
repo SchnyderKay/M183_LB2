@@ -1,3 +1,17 @@
+<?php
+$id = 0;
+$roleid = 0;
+require_once 'fw/db.php';
+if (isset($_COOKIE['userid'])) {
+    $id = $_COOKIE['userid'];
+    $stmt = executeStatement("select users.id userid, roles.id roleid, roles.title rolename from users inner join permissions on users.id = permissions.userid inner join roles on permissions.roleID = roles.id where userid = $id");
+    if ($stmt->num_rows > 0) {
+        $stmt->bind_result($db_userid, $db_roleid, $db_rolename);
+        $stmt->fetch();
+        $roleid = $db_roleid;
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,6 +29,9 @@
         <nav>
             <ul>
                 <li><a href="/">Tasks</a></li>
+                <?php if ($roleid == 1) { ?>
+                    <li><a href="/admin/users.php">User List</a></li>
+                <?php } ?>
                 <li><a href="/logout.php">Logout</a></li>
             </ul>
         </nav>

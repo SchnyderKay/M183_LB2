@@ -47,23 +47,27 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
     // Close statement
     $stmt->close();
 }
+require_once 'fw/header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
-<body>
     <h2>Login</h2>
-    <form action="<?php $_SERVER["PHP_SELF"]; ?>" method="get">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
-        <button type="submit">Login</button>
-    </form>
-</body>
-</html>
+
+
+    <form id="form" method="get" action="<?php $_SERVER["PHP_SELF"]; ?>">
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" class="form-control size-medium" name="username" id="username">
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="text" class="form-control size-medium" name="password" id="password">
+    </div>
+    <div class="form-group">
+        <label for="submit" ></label>
+        <input id="submit" type="submit" class="btn size-auto" value="Login" />
+    </div>
+</form>
+
+<?php
+    require_once 'fw/footer.php';
+?>
