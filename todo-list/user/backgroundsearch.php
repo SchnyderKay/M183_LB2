@@ -4,7 +4,7 @@
         exit();
     }
 
-    include 'fw/db.php';
+    require_once 'fw/db.php';
 ?>
 <section id="search">
     <h2>Search</h2>

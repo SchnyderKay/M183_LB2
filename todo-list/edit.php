@@ -10,12 +10,12 @@
     // read task if possible
     $title="";
     $state="";
-    $id = "";
+    $taskid = "";
 
     if (isset($_GET['id'])){
-        $id = $_GET["id"];
-        include 'fw/db.php';
-        $stmt = executeStatement("select ID, title, state from tasks where ID = $id");
+        $taskid = $_GET["id"];
+        require_once 'fw/db.php';
+        $stmt = executeStatement("select ID, title, state from tasks where ID = $taskid");
         if ($stmt->num_rows > 0) {
             $stmt->bind_result($db_id, $db_title, $db_state);
             $stmt->fetch();
@@ -34,7 +34,7 @@
 <?php } ?>
 
 <form id="form" method="post" action="savetask.php">
-    <input type="hidden" name="id" value="<?php echo $id ?>" />
+    <input type="hidden" name="id" value="<?php echo $taskid ?>" />
     <div class="form-group">
         <label for="title">Description</label>
         <input type="text" class="form-control size-medium" name="title" id="title" value="<?php echo $title ?>">
