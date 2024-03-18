@@ -1,10 +1,22 @@
 <?php
 $id = 0;
 $roleid = 0;
-require_once 'fw/db.php';
-if (isset($_COOKIE['userid'])) {
-    $id = $_COOKIE['userid'];
-    $stmt = executeStatement("select users.id userid, roles.id roleid, roles.title rolename from users inner join permissions on users.id = permissions.userid inner join roles on permissions.roleID = roles.id where userid = $id");
+// require_once('includes/config.php');
+require_once( INCLUDES . '/db.php');
+if (isset($_SESSION['user_id'])) {
+    $id = $_SESSION['user_id'];
+    
+    $conn = getConnection();
+    // Prepare SQL statement to retrieve user from database
+    $stmt = $conn->prepare("select users.id userid, roles.id roleid, roles.title rolename from users inner join permissions on users.id = permissions.userid inner join roles on permissions.roleID = roles.id where userid = ?");
+
+    // Bind parameters and execute the statement
+    $stmt->bind_param("s", $id);
+    $stmt->execute(); // TODO check for error here
+
+    // Store the result
+    $stmt->store_result();
+    
     if ($stmt->num_rows > 0) {
         $stmt->bind_result($db_userid, $db_roleid, $db_rolename);
         $stmt->fetch();
@@ -25,7 +37,7 @@ if (isset($_COOKIE['userid'])) {
 <body>
     <header>
         <div>This is the insecure m183 test app</div>
-        <?php  if (isset($_COOKIE['userid'])) { ?>
+        <?php  if (isset($_SESSION['user_id'])) { ?>
         <nav>
             <ul>
                 <li><a href="/">Tasks</a></li>

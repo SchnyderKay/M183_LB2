@@ -1,9 +1,7 @@
 <?php
-    // Check if the user is logged in
-    if (!isset($_COOKIE['userid'])) {
-        header("Location: /");
-        exit();
-    }
+require_once('includes/config.php');
+require_once( INCLUDES . '/db.php');
+require_once( INCLUDES . '/session.php');
 
     $options = array("Open", "In Progress", "Done");
 
@@ -14,7 +12,7 @@
 
     if (isset($_GET['id'])){
         $taskid = $_GET["id"];
-        require_once 'fw/db.php';
+        // TODO Bind Param
         $stmt = executeStatement("select ID, title, state from tasks where ID = $taskid");
         if ($stmt->num_rows > 0) {
             $stmt->bind_result($db_id, $db_title, $db_state);

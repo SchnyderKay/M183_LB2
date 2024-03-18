@@ -1,20 +1,16 @@
 <?php
-    if (!isset($_COOKIE['username'])) {
-        header("Location: ../login.php");
-        exit();
-    }
-    require_once 'config.php';
-    $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+require_once('includes/config.php');
+require_once( INCLUDES . '/db.php');
+require_once( INCLUDES . '/session.php');
 
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-    $userid = $_COOKIE['userid'];
+    $conn = getConnection();
 
+    // Use either cookie or session variable to get the user ID
+    $userid = $_SESSION['user_id'];
+    // echo("<pre>".print_r($_SESSION)."</pre>");
     // Prepare SQL statement to retrieve user from database
-    $stmt = $conn->prepare("select ID, title, state from tasks where UserID = $userid");
-    // Execute the statement
+    $stmt = $conn->prepare("SELECT ID, title, state FROM tasks WHERE UserID = ?");
+    $stmt->bind_param("i", $userid);
     $stmt->execute();
     // Store the result
     $stmt->store_result();
@@ -22,6 +18,19 @@
     $stmt->bind_result($db_id, $db_title, $db_state);
 ?>
 <section id="list">
+<?php
+if (isset($_GET['insert']) && $_GET['insert'] === 'success') {
+    echo "<span class='info info-success'>Insert successful</span>";
+} elseif (isset($_GET['insert']) && $_GET['insert'] === 'error') {
+    echo "<span class='info info-error'>Error inserting task</span>";
+}
+
+if (isset($_GET['update']) && $_GET['update'] === 'success') {
+    echo "<span class='info info-success'>Update successful</span>";
+} elseif (isset($_GET['update']) && $_GET['update'] === 'error') {
+    echo "<span class='info info-error'>Error updating task</span>";
+}
+?>
     <a href="edit.php">Create Task</a>
     <table>
         <tr>

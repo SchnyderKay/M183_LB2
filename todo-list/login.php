@@ -1,24 +1,25 @@
 <?php
-require_once 'config.php';
+require_once('includes/config.php');
+require_once( INCLUDES . '/db.php');
 
 // Check if the form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_GET['password'])) {
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['username']) && isset($_POST['password'])) {
     // Get username and password from the form
-    $username = $_GET['username'];
-    $password = $_GET['password'];
-    
-    // Connect to the database
-    $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
+    // Sanitize input
+    $username = filter_var($username, FILTER_SANITIZE_STRING);
+    $password = filter_var($password, FILTER_SANITIZE_STRING);
+
+    $conn = getConnection();
     // Prepare SQL statement to retrieve user from database
-    $stmt = $conn->prepare("SELECT id, username, password FROM users WHERE username='$username'");
+    $stmt = $conn->prepare("SELECT id, username, password FROM users WHERE username=? AND password=?");
 
-    // Execute the statement
-    $stmt->execute();
+    // Bind parameters and execute the statement
+    $stmt->bind_param("ss", $username, $password);
+    $stmt->execute(); // TODO check for error here
+
     // Store the result
     $stmt->store_result();
     // Check if username exists
@@ -30,44 +31,41 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['username']) && isset($_G
         // Verify the password
         if ($password == $db_password) {
             // Password is correct, store username in session
-            setcookie("username", $username, -1, "/"); // 86400 = 1 day
-            setcookie("userid", $db_id, -1, "/"); // 86400 = 1 day
+            session_start();
+            $_SESSION['username'] = $db_username;
+            $_SESSION['user_id'] = $db_id;
             // Redirect to index.php
-            header("Location: index.php");
+            header("Location: /index.php");
             exit();
-        } else {
-            // Password is incorrect
-            echo "Incorrect password";
-        }
-    } else {
-        // Username does not exist
-        echo "Username does not exist";
-    }
+        } 
+    } 
 
-    // Close statement
-    $stmt->close();
+    header("Location: /login.php?failed=1");
+    exit();
 }
 require_once 'fw/header.php';
 ?>
 
-    <h2>Login</h2>
+<h2>Login</h2>
 
+<?php if (isset($_GET['failed']) ) { ?>
+    <p>Something went wrong. Please try again.</p>
+<?php } ?>
 
-    <form id="form" method="get" action="<?php $_SERVER["PHP_SELF"]; ?>">
+<form id="form" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
     <div class="form-group">
         <label for="username">Username</label>
         <input type="text" class="form-control size-medium" name="username" id="username">
     </div>
     <div class="form-group">
         <label for="password">Password</label>
-        <input type="text" class="form-control size-medium" name="password" id="password">
+        <input type="password" class="form-control size-medium" name="password" id="password">
     </div>
     <div class="form-group">
-        <label for="submit" ></label>
-        <input id="submit" type="submit" class="btn size-auto" value="Login" />
+        <input id="submit" type="submit" class="btn size-auto" value="Login">
     </div>
 </form>
 
 <?php
-    require_once 'fw/footer.php';
+require_once 'fw/footer.php';
 ?>

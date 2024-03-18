@@ -1,5 +1,5 @@
 <?php
-
+exit();
     if (!isset($_POST["provider"]) || !isset($_POST["terms"]) || !isset($_POST["userid"])){
         exit("Not enough information provided");
     }

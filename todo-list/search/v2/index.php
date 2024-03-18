@@ -1,18 +1,32 @@
 <?php
+require_once('../../includes/config.php');
+require_once( INCLUDES . '/db.php');
+require_once( INCLUDES . '/session.php');
 
-    if (!isset($_GET["userid"]) || !isset($_GET["terms"])){
-        die("Not enough information to search");
+    $conn = getConnection();
+
+
+    if (!isset($_POST["userid"]) || !isset($_POST["terms"])){
+        exit("Not enough information to search");
     }
 
-    $userid = $_GET["userid"];
-    $terms = $_GET["terms"];
+    if ($_POST["userid"] != $_SESSION['user_id']) {
+        exit("Unauthorized search");
+    }
 
-    require_once '../../fw/db.php';
-    $stmt = executeStatement("select ID, title, state from tasks where userID = $userid and title like '%$terms%'");
+    $userid = $_POST["userid"];
+    $terms = $_POST["terms"];
+
+    // TODO - bind params!!
+    $stmt = $conn->prepare("select ID, title, state from tasks where userID = ? and title like ?");
+    $terms = '%' . $terms . '%';
+    $stmt->bind_param("ss", $userid, $terms);
+    $stmt->execute();
+    $stmt->store_result();
     if ($stmt->num_rows > 0) {
         $stmt->bind_result($db_id, $db_title, $db_state);
         while ($stmt->fetch()) {
-            echo $db_title . ' (' . $db_state . ')<br />';
+            echo htmlspecialchars($db_title) . ' (' . htmlspecialchars($db_state) . ')<br />';
         }
     }
 ?>

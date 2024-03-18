@@ -1,10 +1,7 @@
 <?php
-    if (!isset($_COOKIE['username'])) {
-        header("Location: ../login.php");
-        exit();
-    }
-
-    require_once 'fw/db.php';
+require_once('includes/config.php');
+require_once( INCLUDES . '/db.php');
+require_once( INCLUDES . '/session.php');
 ?>
 <section id="search">
     <h2>Search</h2>
@@ -37,10 +34,10 @@
         submitHandler: function (form) {
             provider = $("#searchurl").val();
             terms = $("#terms").val();
-            userid = <?php echo $_COOKIE["userid"] ?>;
+            userid = <?php echo $_SESSION['user_id'] ?>;
             $("#msg").show();
             $("#result").html("");
-            $.post("search.php", { provider: provider, terms: terms, userid: userid }, function(data){
+            $.post("/search/v2/index.php", { provider: provider, terms: terms, userid: userid }, function(data){
                 console.log(data);
                 $("#result").html(data);
                 $("#msg").hide(500);

@@ -1,10 +1,16 @@
 <?php
-    
-    unset($_COOKIE['username']); 
-    setcookie('username', '', -1, '/'); 
-    unset($_COOKIE['userid']); 
-    setcookie('userid', '', -1, '/'); 
+require_once('includes/config.php');
+require_once( INCLUDES . '/db.php');
+require_once( INCLUDES . '/session.php');
 
-    header("Location: /");
-    exit();
+// Unset session variables
+unset($_SESSION['username']); 
+unset($_SESSION['user_id']); 
+
+// Destroy the session
+session_destroy();
+
+// Redirect to the homepage
+header("Location: /");
+exit();
 ?>
