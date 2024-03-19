@@ -10,4 +10,3 @@ define('DB_NAME', 'm183_lb2');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 define('DEBUG',true);
-// mysqli_report(MYSQLI_REPORT_ALL);

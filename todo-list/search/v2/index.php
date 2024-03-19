@@ -14,15 +14,19 @@ require_once( INCLUDES . '/session.php');
         exit("Unauthorized search");
     }
 
-    $userid = $_POST["userid"];
-    $terms = $_POST["terms"];
+    // Sanitize input
+    $userid = filter_var($_POST['userid'], FILTER_SANITIZE_STRING);
+    $terms = filter_var($_POST['terms'], FILTER_SANITIZE_STRING);
 
-    // TODO - bind params!!
     $stmt = $conn->prepare("select ID, title, state from tasks where userID = ? and title like ?");
+
     $terms = '%' . $terms . '%';
     $stmt->bind_param("ss", $userid, $terms);
+
     $stmt->execute();
+
     $stmt->store_result();
+
     if ($stmt->num_rows > 0) {
         $stmt->bind_result($db_id, $db_title, $db_state);
         while ($stmt->fetch()) {

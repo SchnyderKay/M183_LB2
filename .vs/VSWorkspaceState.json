@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\docker",
+    "\\todo-list",
+    "\\todo-list\\admin",
+    "\\todo-list\\fw",
+    "\\todo-list\\includes",
+    "\\todo-list\\search",
+    "\\todo-list\\search\\v2",
+    "\\todo-list\\user"
+  ],
+  "SelectedNode": "\\todo-list\\search\\v2\\index.php",
+  "PreviewInSolutionExplorer": false
+}

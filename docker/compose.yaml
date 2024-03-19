@@ -17,5 +17,5 @@ services:
         - "80:80"
       volumes:
         - type: bind
-          source: C:\Dev\m183-LB2\todo-list
+          source: C:\School\IT-Modules\M183\M183_LB2\todo-list
           target: /var/www/html

@@ -7,20 +7,18 @@ require_once( INCLUDES . '/session.php');
     $taskid = "";
 
     // see if the id exists in the database
-
     if (isset($_POST['id']) && strlen($_POST['id']) != 0){
-        $taskid = $_POST["id"];
-        //$stmt = executeStatement("select ID, title, state from tasks where ID = $taskid");
+        $taskid = $_POST['id'];
         $stmt = $conn->prepare("select ID, title, state from tasks where ID = ?");
-        $stmt->bind_param("s", $_POST['id']);
+        $stmt->bind_param("i", $taskid);
         $stmt->execute();
+        $stmt->store_result();
         if ($stmt->num_rows == 0) {
             $taskid = "";
         }
     }
   
   if (isset($_POST['title']) && isset($_POST['state'])){
-    
     // Sanitize input
     $title = filter_var($_POST['title'], FILTER_SANITIZE_STRING);
     $state = filter_var($_POST['state'], FILTER_SANITIZE_STRING);
@@ -30,36 +28,45 @@ require_once( INCLUDES . '/session.php');
         $userid = $_SESSION['user_id'];
         $conn = getConnection();
 
-
         if ($taskid == "") {
-        $stmt = $conn->prepare("INSERT INTO tasks (title, state, userID) VALUES (?, ?, ?)");
-        if (!$stmt) {
-            if(DEBUG) {
-                $error = $conn->errno . ' ' . $conn->error;
-                echo "<br>".$error;
+            $stmt = $conn->prepare("INSERT INTO tasks (title, state, userID) VALUES (?, ?, ?)");
+            // If preparing statement fails exit or show error when in debug mode
+            if (!$stmt) {
+                if(DEBUG) {
+                    $error = $conn->errno . ' ' . $conn->error;
+                    echo "<br>".$error;
+                }
+                exit();
             }
-            exit();
-        }
-
-        $stmt->bind_param("ssi", $title, $state, $userid);
-        if ($stmt->execute()) {
-            header("Location: /?insert=success");
-            exit();
+            $stmt->bind_param("ssi", $title, $state, $userid);
+            // Regarding the response of INSERT  relocate differently
+            if ($stmt->execute()) {
+                header("Location: /?insert=success");
+                exit();
+            } else {
+                header("Location: /?insert=error");
+                exit();
+            }
         } else {
-            header("Location: /?insert=error");
-            exit();
+            $stmt = $conn->prepare("UPDATE tasks SET title = ?, state = ? WHERE ID = ? AND userID = ?");
+            // If preparing statement fails exit or show error when in debug mode
+            if (!$stmt) {
+                if(DEBUG) {
+                    $error = $conn->errno . ' ' . $conn->error;
+                    echo "<br>".$error;
+                }
+                exit();
+            }
+            $stmt->bind_param("ssii", $title, $state, $taskid, $userid);
+            // Regarding the response of UPDATE  relocate differently
+            if ($stmt->execute()) {
+                header("Location: /?update=success");
+                exit();
+            } else {
+                header("Location: /?update=error");
+                exit();
+            }
         }
-    } else {
-        $stmt = $conn->prepare("UPDATE tasks SET title = ?, state = ? WHERE ID = ? AND userID = ?");
-        $stmt->bind_param("ssii", $title, $state, $taskid, $userid);
-        if ($stmt->execute()) {
-            header("Location: /?update=success");
-            exit();
-        } else {
-            header("Location: /?update=error");
-            exit();
-        }
-    }
     }
   }
   else {

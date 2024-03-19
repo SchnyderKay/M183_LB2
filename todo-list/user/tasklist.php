@@ -5,18 +5,38 @@ require_once( INCLUDES . '/session.php');
 
     $conn = getConnection();
 
-    // Use either cookie or session variable to get the user ID
     $userid = $_SESSION['user_id'];
-    // echo("<pre>".print_r($_SESSION)."</pre>");
-    // Prepare SQL statement to retrieve user from database
-    $stmt = $conn->prepare("SELECT ID, title, state FROM tasks WHERE UserID = ?");
-    $stmt->bind_param("i", $userid);
-    $stmt->execute();
-    // Store the result
-    $stmt->store_result();
-    // Bind the result variables
-    $stmt->bind_result($db_id, $db_title, $db_state);
+
+    $stmt = $conn->prepare("SELECT ID, title, state FROM tasks WHERE userID = ?");
+
+    if($stmt){
+        $stmt->bind_param("i", $userid);
+
+        if($stmt->execute()){
+                $stmt->store_result();
+
+                $stmt->bind_result($db_id, $db_title, $db_state);
+        } else {
+            if(DEBUG) {
+                $error = $conn->errno . ' ' . $conn->error;
+                echo "<br>".$error;
+            }
+            header("Location: tasklist/?loading=failed");
+            exit();
+        }
+    } else {
+        if(DEBUG) {
+            $error = $conn->errno . ' ' . $conn->error;
+            echo "<br>".$error;
+        }
+        header("Location: tasklist/?loading=failed");
+        exit();
+    }
+   
 ?>
+<?php if (isset($_GET['failed']) ) { ?>
+    <p>Something went wrong while loading tasks. Please try again.</p>
+<?php } ?>
 <section id="list">
 <?php
 if (isset($_GET['insert']) && $_GET['insert'] === 'success') {
