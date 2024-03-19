@@ -66,8 +66,9 @@ require_once 'fw/header.php';
         <input type="password" class="form-control size-medium" name="password" id="password">
     </div>
     <div class="form-group">
-        <input id="submit" type="submit" class="btn size-auto" value="Login">
-    </div>
+        <label for="submit" ></label>
+        <input id="submit" type="submit" class="btn size-auto" value="Login" />
+    </div>    
 </form>
 
 <?php
