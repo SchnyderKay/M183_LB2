@@ -1,15 +1,17 @@
 <?php
 require 'vendor/autoload.php';
-require_once 'config.php';
-require_once 'fw/db.php';
+require_once 'includes/config.php';
+require_once 'includes/db.php';
+require_once( INCLUDES . '/session.php');
 
 use RobThree\Auth\TwoFactorAuth;
 
 // Check if the form is submitted
 // Connect to the database
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-$username = $_COOKIE['username'];
+$username = $_SESSION['username'];
 $tfa = new TwoFactorAuth();
+$_new_created_secret = false;
 
 // Check connection
 if ($conn->connect_error) {
@@ -41,22 +43,25 @@ $stmt->close();
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['verification'])) {
     // Get username and password from the form
     $verification = $_GET['verification'];
-    #$code = $tfa->getCode($secret);
+
 
     try {
         if ($tfa->verifyCode($secret, $verification) === true){
+            $_SESSION['user_id'] = $user_id;
             header("Location: index.php");
             exit(); 
         }
         else {
-            echo '<script>alert("Authentication failed.")</script>';
-            header("Location: logout.php");
-            exit(); 
+            echo "<script>
+            alert('Authentication failed please try again.');
+            window.location.href='login.php';
+            </script>";
         }
     } catch (Exception $e) {
-        echo '<script>alert("Something went wrong please try again.")</script>';
-        header("Location: logout.php");
-        exit(); 
+         echo "<script>
+            alert('Authentication failed please try again.');
+            window.location.href='login.php';
+            </script>";
     }
     
 }
@@ -66,9 +71,10 @@ require_once 'fw/header.php';
     <h2>2Factor Authentication</h2>
     <div id="authentication">
         <?php
-            if ($secret == 0){
+            if ($secret == null){
                 $secret = $tfa->createSecret();
                 $stmt = executeStatement("update users set secret = '$secret' where ID = $user_id");
+                $_new_created_secret = true;
                 ?>
                 <p> Scan with Microsoft Authenticator</p>
                 <img src="<?php echo $tfa->getQRCodeImageAsDataUri('Demo', $secret); ?>"><br>
