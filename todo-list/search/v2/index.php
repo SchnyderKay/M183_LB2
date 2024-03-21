@@ -1,5 +1,5 @@
 <?php
-require_once('../../includes/config.php');
+require_once(INCLUDES . '/config.php');
 require_once( INCLUDES . '/db.php');
 require_once( INCLUDES . '/session.php');
 
@@ -15,8 +15,8 @@ require_once( INCLUDES . '/session.php');
     }
 
     // Sanitize input
-    $userid = filter_var($_POST['userid'], FILTER_SANITIZE_STRING);
-    $terms = filter_var($_POST['terms'], FILTER_SANITIZE_STRING);
+    $userid = filter_var($_POST['userid'], FILTER_SANITIZE_SPECIAL_CHARS);
+    $terms = filter_var($_POST['terms'], FILTER_SANITIZE_SPECIAL_CHARS);
 
     $stmt = $conn->prepare("select ID, title, state from tasks where userID = ? and title like ?");
 

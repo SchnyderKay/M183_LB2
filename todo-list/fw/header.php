@@ -35,21 +35,21 @@ require_once( INCLUDES . '/db.php');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TBZ 'Secure' App</title>
-    <link rel="stylesheet" href="/fw/style.css" />
+    <style><?php include 'style.css'?></style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
 </head>
 <body>
     <header>
-        <div>This is the insecure m183 test app</div>
+        <div>This is the secure m183 test app</div>
         <?php  if (isset($_SESSION['user_id'])) { ?>
         <nav>
             <ul>
                 <li><a href="/">Tasks</a></li>
                 <?php if ($roleid == 1) { ?>
-                    <li><a href="/admin/users.php">User List</a></li>
+                    <li><a href="/users">User List</a></li>
                 <?php } ?>
-                <li><a href="/logout.php">Logout</a></li>
+                <li><a href="/logout">Logout</a></li>
             </ul>
         </nav>
         <?php  } ?>

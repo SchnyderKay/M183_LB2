@@ -21,7 +21,7 @@ require_once( INCLUDES . '/session.php');
                 $error = $conn->errno . ' ' . $conn->error;
                 echo "<br>".$error;
             }
-            header("Location: tasklist/?loading=failed");
+            header("Location: /tasklist/?loading=failed");
             exit();
         }
     } else {
@@ -29,7 +29,7 @@ require_once( INCLUDES . '/session.php');
             $error = $conn->errno . ' ' . $conn->error;
             echo "<br>".$error;
         }
-        header("Location: tasklist/?loading=failed");
+        header("Location: /tasklist/?loading=failed");
         exit();
     }
    
@@ -51,7 +51,7 @@ if (isset($_GET['update']) && $_GET['update'] === 'success') {
     echo "<span class='info info-error'>Error updating task</span>";
 }
 ?>
-    <a href="edit.php">Create Task</a>
+    <a href="/edit">Create Task</a>
     <table>
         <tr>
             <th>ID</th>
@@ -65,7 +65,7 @@ if (isset($_GET['update']) && $_GET['update'] === 'success') {
                 <td class="wide"><?php echo $db_title ?></td>
                 <td><?php echo ucfirst($db_state) ?></td>
                 <td>
-                    <a href="edit.php?id=<?php echo $db_id ?>">edit</a> | <a href="delete.php?id=<?php echo $db_id ?>">delete</a>
+                    <a href="/edit?id=<?php echo $db_id ?>">edit</a> | <a href="delete.php?id=<?php echo $db_id ?>">delete</a>
                 </td>
             </tr>
         <?php } ?>        

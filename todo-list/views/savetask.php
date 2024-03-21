@@ -20,8 +20,8 @@ require_once( INCLUDES . '/session.php');
   
   if (isset($_POST['title']) && isset($_POST['state'])){
     // Sanitize input
-    $title = filter_var($_POST['title'], FILTER_SANITIZE_STRING);
-    $state = filter_var($_POST['state'], FILTER_SANITIZE_STRING);
+    $title = filter_var($_POST['title'], FILTER_SANITIZE_SPECIAL_CHARS);
+    $state = filter_var($_POST['state'], FILTER_SANITIZE_SPECIAL_CHARS);
 
     // Check if user_id is set in $_SESSION
     if (isset($_SESSION['user_id'])) {
@@ -41,10 +41,10 @@ require_once( INCLUDES . '/session.php');
             $stmt->bind_param("ssi", $title, $state, $userid);
             // Regarding the response of INSERT  relocate differently
             if ($stmt->execute()) {
-                header("Location: /?insert=success");
+                header("Location: /tasklist/?insert=success");
                 exit();
             } else {
-                header("Location: /?insert=error");
+                header("Location: /tasklist/?insert=error");
                 exit();
             }
         } else {
@@ -60,10 +60,10 @@ require_once( INCLUDES . '/session.php');
             $stmt->bind_param("ssii", $title, $state, $taskid, $userid);
             // Regarding the response of UPDATE  relocate differently
             if ($stmt->execute()) {
-                header("Location: /?update=success");
+                header("Location: /tasklist/?update=success");
                 exit();
             } else {
-                header("Location: /?update=error");
+                header("Location: /tasklist/?update=error");
                 exit();
             }
         }

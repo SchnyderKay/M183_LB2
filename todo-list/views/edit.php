@@ -31,7 +31,7 @@ require_once( INCLUDES . '/session.php');
     <h1>Create Task</h1>
 <?php } ?>
 
-<form id="form" method="post" action="savetask.php">
+<form id="form" method="post" action="/savetask">
     <input type="hidden" name="id" value="<?php echo $taskid ?>" />
     <div class="form-group">
         <label for="title">Description</label>

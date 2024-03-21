@@ -1,8 +1,9 @@
 <?php
-require 'vendor/autoload.php';
-require_once 'includes/config.php';
-require_once 'includes/db.php';
+require_once dirname(__DIR__).'/vendor/autoload.php';
+require_once('includes/config.php');
+require_once( INCLUDES . '/db.php');
 require_once( INCLUDES . '/session.php');
+
 
 use RobThree\Auth\TwoFactorAuth;
 
@@ -38,30 +39,32 @@ if ($stmt->num_rows > 0) {
 $stmt->close();
 
 
-if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['verification'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['verification'])) {
     // Get username and password from the form
-    $verification = $_GET['verification'];
+    $verification = $_POST['verification'];
 
     try {
         if ($tfa->verifyCode($verification_secret, $verification) === true){
             $stmt = executeStatement("update users set secret = '$verification_secret' where ID = $user_id");
             $stmt = executeStatement("update users set temp_secret = NULL where ID = $user_id");
             $_SESSION['user_id'] = $user_id;
-            header("Location: index.php");
+            header("Location: /");
             exit(); 
         }
         else {
             $stmt = executeStatement("update users set temp_secret = NULL where ID = $user_id");
+            unset($_SESSION['username']); 
             echo "<script>
                 alert('Authentication failed please try again.');
-                window.location.href='login.php';
+                window.location.href='/login';
                 </script>";
         }
     } catch (Exception $e) {
         $stmt = executeStatement("update users set temp_secret = NULL where ID = $user_id");
+        unset($_SESSION['username']); 
         echo "<script>
             alert('Authentication failed please try again.');
-            window.location.href='login.php';
+            window.location.href='/login';
             </script>";
     }
     
@@ -83,7 +86,7 @@ require_once 'fw/header.php';
             }
         ?>
     </div>
-    <form id="form" method="get" action="<?php $_SERVER["PHP_SELF"]; ?>">
+    <form id="form" method="post" action="#">
     <div class="form-group">
         <label for="secret">Verification code </label>
         <input input type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==6) return false;" required type="number" class="form-control size-medium" name="verification" id="verification">
