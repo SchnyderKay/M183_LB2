@@ -9,8 +9,8 @@ require_once( INCLUDES . '/db.php');
         $password = $_POST['password'];
 
         // Sanitize input
-        $username = filter_var($username, FILTER_SANITIZE_STRING);
-        $password = filter_var($password, FILTER_SANITIZE_STRING);
+        $username = filter_var($username, FILTER_SANITIZE_SPECIAL_CHARS);
+        $password = filter_var($password, FILTER_SANITIZE_SPECIAL_CHARS);
 
         $conn = getConnection();
         // Prepare SQL statement to retrieve user from database
@@ -35,9 +35,8 @@ require_once( INCLUDES . '/db.php');
                         // Password is correct, store username in session
                         session_start();
                         $_SESSION['username'] = $db_username;
-                        $_SESSION['user_id'] = $db_id;
                         // Redirect to index.php
-                        header("Location: /index.php");
+                        header("Location: /authentication.php");
                         exit();
                     } 
                 }
