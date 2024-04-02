@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['username']) && isset(
 
     $conn = getConnection();
     // Prepare SQL statement to retrieve user from database
-    $stmt = $conn->prepare("SELECT ID, username, password FROM users WHERE username=? AND password=?");
+    $stmt = $conn->prepare("SELECT ID, username, password FROM users WHERE username=?");
     // If preparing statement fails exit or show error when in debug mode
     if (!$stmt) {
         if(DEBUG) {
@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['username']) && isset(
         }
         exit();
     } else {
-        $stmt->bind_param("ss", $username, $password);
+        $stmt->bind_param("s", $username);
         if ($stmt->execute()){
             $stmt->store_result();
             // Check if username exists
@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['username']) && isset(
                 $stmt->bind_result($db_id, $db_username, $db_password);
                 $stmt->fetch();
                 // Verify the password
-                if ($password == $db_password) { // TODO password verification
+                if (password_verify($password, $db_password)) {
                     // Password is correct, store username in session
                     $_SESSION['username'] = $db_username;
                     // Redirect to authentication.php
