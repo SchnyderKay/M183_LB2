@@ -130,9 +130,8 @@ COMMIT;
 insert into roles (ID, title) values (2, 'User');
 insert into roles (ID, title) values (1, 'Admin');
 
-
-insert into users (ID, username, password) values (1, 'admin1', 'Awesome.Pass34');
-insert into users (ID, username, password) values (2, 'user1', 'Amazing.Pass23');
+insert into users (ID, username, password) values (1, 'admin1', '$2y$10$wENk4Zq32Z4EovY2IgGxzuXX.S64BC68pWxF93L3buG/In8uEwP8e');
+insert into users (ID, username, password) values (2, 'user1', '$2y$10$JUWUgZbP8lpmVdG20KIbJuyC4EqBGfHtTYAMJi6lqAboqL3f36xpm');
 
 insert into permissions(ID, userID, roleID) values(null, 1, 1);
 insert into permissions(ID, userID, roleID) values(null, 2, 2);
