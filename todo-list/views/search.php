@@ -1,4 +1,5 @@
 <?php
+// Search allows request to random sites, not in use anymore
 exit();
     if (!isset($_POST["provider"]) || !isset($_POST["terms"]) || !isset($_POST["userid"])){
         exit("Not enough information provided");

@@ -1,5 +1,5 @@
 <?php
-
+    // Not using this function 
     function executeStatement($statement){
         $conn = getConnection();
         $stmt = $conn->prepare($statement);
@@ -23,4 +23,13 @@
         }
 
         return $conn;
+    }
+
+    function errorHandlingPreparedStatement(){
+        if (DEBUG) {
+           $error = $conn->errno . ' ' . $conn->error;
+           echo "<br>".$error;
+        } else {
+            exit();
+        }       
     }

@@ -1,6 +1,8 @@
 <?php
 require_once(dirname(__DIR__).'/includes/config.php');
 require_once(dirname(__DIR__).'/includes/db.php');
+include(dirname(__DIR__).'/includes/header_manipulations.php');
+
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['username']) && isset($_POST['password'])) {
     // Get username and password from the form
@@ -16,11 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['username']) && isset(
     $stmt = $conn->prepare("SELECT ID, username, password FROM users WHERE username=?");
     // If preparing statement fails exit or show error when in debug mode
     if (!$stmt) {
-        if(DEBUG) {
-            $error = $conn->errno . ' ' . $conn->error;
-            echo "<br>".$error;
-        }
-        exit();
+        errorHandlingPreparedStatement($stmt);
     } else {
         $stmt->bind_param("s", $username);
         if ($stmt->execute()){
@@ -37,6 +35,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['username']) && isset(
                     header('Location:/authentication');
                     exit();
                 } 
+            } else {
+                errorHandlingPreparedStatement($stmt);
             }
         }
         header("Location:/login?failed=1");

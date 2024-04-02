@@ -6,3 +6,20 @@ Wichtig: die DB wird nicht automatisch erzeugt. Verbinden Sie sich dafür mit ei
 
 ## SQL 
 Damit die Applikation funktioniert wird davon ausgegangen, dass jeder Username in der Datenbank nur einmal existiert. Damit dies sichergestellt werden kann in der Zukunft, könnte man beim feature für die User-Erstellung eine Prüfung hinzufügen.
+
+## Gefundene Schwachstellen
+Unsanierte Inputfelder 
+Unsichere SQL Abfragen
+Unsicherer Gebrauch von Cookies
+Unzutreffendes / Nicht vorhandenes Error Handling
+Fehlerhaftes Routing 
+	- Unerwünschte Anzeige von Informationen in der URL 
+	- Unerlaubter Zugriff auf Files möglich, welche geschützt sein sollten  (bspw. abrufen des DB File lädt das DB Schema lokal herunter)
+Ein Suchfeld erlaubt das Abrufen von beliebigen URL's 
+Risiken von XSS und MIME-Sniffing gefunden
+Serverinformationen sichtbar
+Passwörter sind ungehasht in der Datenbank gespeichert
+
+
+## Implementierte Funktion
+Two Factor Authentication mit Microsoft Authenticator

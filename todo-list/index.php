@@ -24,18 +24,24 @@ function isAuthenticated(){
 
 function hasAdminRights(){
     $user_id = $_SESSION['user_id'];
+    
     $conn = getConnection();
-    $stmt = $conn->prepare("SELECT roleID FROM permissions WHERE userId='$user_id'");
+
+    $stmt = $conn->prepare("SELECT roleID FROM permissions WHERE userId = ?");
+    
+    $stmt->bind_param("i", $user_id);
+    
     $stmt->execute();
-    $stmt->store_result();
+    
     $stmt->bind_result($role_id);
-    if ($role_id = '1'){
+    
+    if ($role_id == 1) {
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
+
 
 function redirect($request){
     $pages = array("/login", "/authentication", "/", "/admin/users", "/edit", "/logout");

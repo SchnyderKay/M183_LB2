@@ -12,14 +12,27 @@ require_once( INCLUDES . '/session.php');
 
     if (isset($_GET['id'])){
         $taskid = $_GET["id"];
-        // TODO Bind Param
-        $stmt = executeStatement("select ID, title, state from tasks where ID = $taskid");
-        if ($stmt->num_rows > 0) {
-            $stmt->bind_result($db_id, $db_title, $db_state);
-            $stmt->fetch();
-            $title = $db_title;
-            $state = $db_state;
+        $stmt = $conn->prepare("select ID, title, state from tasks where ID=?");
+
+        // If preparing the statement fails exit or show error when in debug mode
+        if ($stmt) {
+            $stmt->bind_param("i", $taskid);
+            if ($stmt->execute()){
+                if ($stmt->num_rows > 0) {
+                    $stmt->bind_result($db_id, $db_title, $db_state);
+                    $stmt->fetch();
+                    $title = $db_title;
+                    $state = $db_state;
+                } else {
+                    errorHandlingPreparedStatement($stmt);
+                }
+            } else {
+                errorHandlingPreparedStatement($stmt);
+            }     
+        } else {
+            errorHandlingPreparedStatement($stmt);
         }
+
     }
 
     require_once 'fw/header.php';

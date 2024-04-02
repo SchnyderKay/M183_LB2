@@ -38,7 +38,6 @@ require_once( INCLUDES . '/session.php');
             $("#msg").show();
             $("#result").html("");
             $.post("/search/v2/index.php", { provider: provider, terms: terms, userid: userid }, function(data){
-                console.log(data);
                 $("#result").html(data);
                 $("#msg").hide(500);
                 $("#result").show(500);

@@ -2,7 +2,6 @@
 require_once(dirname(__DIR__).'/includes/config.php');
 require_once( INCLUDES . '/db.php');
 require_once( INCLUDES . '/session.php');
-    //To Do Error Handling
     $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
     // Check connection
