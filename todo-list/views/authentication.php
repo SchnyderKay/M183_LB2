@@ -80,7 +80,7 @@ require_once 'fw/header.php';
                 $stmt = executeStatement("update users set temp_secret = '$verification_secret' where ID = $user_id");
                 ?>
                 <p> Scan with Microsoft Authenticator</p>
-                <img src="<?php echo $tfa->getQRCodeImageAsDataUri('Demo', $verification_secret); ?>"><br>
+                <img src="<?php echo $tfa->getQRCodeImageAsDataUri('LB02', $verification_secret); ?>"><br>
                 <p>Or enter the code manually</p>
                 <?php echo chunk_split($verification_secret, 4, ' '); 
             }
