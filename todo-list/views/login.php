@@ -29,9 +29,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['username']) && isset(
                 // Verify the password
                 if (password_verify($password, $db_password)) {
                     // Password is correct, store username in session
+                    $_SESSION['user_id'] = $db_id;
                     $_SESSION['username'] = $db_username;
-                    // Redirect to authentication.php
-                    header('Location:/authentication');
+                    // Redirect to main
+                    header('Location:/');
                     exit();
                 } 
             } else {

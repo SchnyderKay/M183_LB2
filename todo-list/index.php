@@ -4,17 +4,8 @@ require_once( INCLUDES . '/db.php');
 require_once( INCLUDES . '/session.php');
 $request = htmlspecialchars($_SERVER['REQUEST_URI']);
 
-function isLoggedIn(){
-    if (isset($_SESSION['username']) && !isset($_SESSION['user_id'])){
-        return true; 
-    }
-    else{
-        return false;
-    }
-}
-
 function isAuthenticated(){
-    if (isset($_SESSION['user_id']) && isset($_SESSION['username'])){
+    if (isset($_SESSION['username'])){
         return true; 
     }
     else{
@@ -44,12 +35,9 @@ function hasAdminRights(){
 
 
 function redirect($request){
-    $pages = array("/login", "/authentication", "/", "/admin/users", "/edit", "/logout");
+    $pages = array("/login", "/", "/admin/users", "/edit", "/logout");
 
-    if(isLoggedIn()){
-        header("Location: /authentication");
-        exit();
-    }else if (isAuthenticated())
+    if(isAuthenticated())
     {
         header("Location: /");
         exit();
@@ -81,8 +69,8 @@ function isValidParameterEdit($request){
 }
 
 match (true) {
-     ($request == '/login' || $request == '/login?failed=1')  && !isLoggedIn() && !isAuthenticated() => require __DIR__ . '/views/login.php',
-     $request == '/authentication' && isLoggedIn()=> require __DIR__ . '/views/authentication.php',
+     ($request == '/login' || $request == '/login?failed=1') && !isAuthenticated() => require __DIR__ . '/views/login.php',
+     //$request == '/authentication' && isLoggedIn()=> require __DIR__ . '/views/authentication.php',
      $request == '/logout' && isAuthenticated() => require __DIR__ . '/views/logout.php',
      $request == '/users' && isAuthenticated() && hasAdminRights() => require __DIR__ . '/admin/users.php',
      ($request == '/edit' || isValidParameterEdit($request)) && isAuthenticated() => require __DIR__ . '/views/edit.php',
