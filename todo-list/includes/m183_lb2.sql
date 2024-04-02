@@ -66,7 +66,7 @@ CREATE TABLE `tasks` (
 
 CREATE TABLE `users` (
   `ID` bigint(20) NOT NULL,
-  `username` varchar(255) NOT NULL UNIQUE,
+  `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `secret` varchar(255),
   `temp_secret` varchar(255)
