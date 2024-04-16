@@ -33,7 +33,6 @@ function hasAdminRights(){
     }
 }
 
-
 function redirect($request){
     $pages = array("/login", "/", "/admin/users", "/edit", "/logout");
 
