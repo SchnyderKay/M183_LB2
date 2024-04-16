@@ -2,7 +2,6 @@
 $id = 0;
 $roleid = 0;
 require_once( INCLUDES . '/db.php');
-require_once( INCLUDES . '/header_manipulations.php');
 
     if (isset($_SESSION['user_id'])) {
         $id = $_SESSION['user_id'];

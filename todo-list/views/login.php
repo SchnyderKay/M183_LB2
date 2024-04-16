@@ -1,7 +1,6 @@
 <?php
 require_once(dirname(__DIR__).'/includes/config.php');
 require_once(dirname(__DIR__).'/includes/db.php');
-include(dirname(__DIR__).'/includes/header_manipulations.php');
 
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['username']) && isset($_POST['password'])) {
